@@ -1,7 +1,7 @@
 # NFS BNDL Model Challenger 使用教程/Tutorial
 
 极品飞车Most Wanted(2012)车辆模型导入工具，需要NFSbndlRepacker解包/打包BNDL文件 (https://github.com/144hz/NFSbndlRepacker)  
-Need for Speed Most Wanted (2012) vehicle model import tool, require NFSbndlRepacker to unpack/repack the BNDL file.
+Need for Speed Most Wanted (2012) vehicle model tool, require NFSbndlRepacker to unpack/repack the BNDL file.
 
 样例文件blender+obj下载地址 / blender project example + output obj:  
 https://mega.nz/file/bEFmVB5a#HPFk80gaPnkH1rQveBBQzKGRHwqpgDc23vM9qs5x-Q8
@@ -35,7 +35,7 @@ d.  顶点座标，uv座标，法线向量一一对应。即导出obj的面格�
 
 ### 2.   NBMC导入模型
 
-(1) 图中两个路径分别为BNDLRepacker解包所得的文件夹和导出的obj模型。点击转换模型会把obj模型和dds贴图导入解包车辆文件夹内。
+(1) 图中两个路径分别为BNDLRepacker解包所得的文件夹和导出的obj模型。点击转换模型会把obj模型和dds贴图导入解包车辆文件夹内。  
 若NBMC在导入模型时未在obj所在文件夹下找到object name同名dds贴图，将替代导入默认贴图。  
 ![NBMC_screenshot](https://github.com/144hz/NFSbndlModelChallenger/blob/master/tutorial_images/2.jpg)
 
@@ -48,4 +48,37 @@ d.  顶点座标，uv座标，法线向量一一对应。即导出obj的面格�
 
 ## English Version
 
-//TODO
+### 1.	Export model with Blender
+(1)	NBMC supports the following materials: {metal, carbon, glass, light, interior, tmask}. The first half of the object name in Blender should be selected from the above, NBMC will generate the material from this, as shown.  
+![Blender_screenshot](https://github.com/144hz/NFSbndlModelChallenger/blob/master/tutorial_images/1.jpg)
+
+(2)	Material requirements: 
+
+Material type | Blender object name | dds texture (DXT5) | Note
+---------- | -------------------------- | ------------------------- | -----------
+metal | metal_name | same as object name | texture transparent area is the paint color
+carbon | carbon_name | same as object name | texture transparent area is black
+glass | glass_ARGB | no texture | The naming format is like glass_80F0C040，the larger the alpha channel value, the more opaque the glass
+light | light_ARGB | same as object name | The naming format is like light_FF00FF80，alpha channel does not take effect, RGB represents the color of the headlight
+interior | interior_name | same as object name | texture alpha channel does not take effect
+tmask | tmask_name | same as object name | texture mask, the model in texture transparent area is transparent
+
+Texture of Light material: the alpha channel of the texture indicates the brightness of rear lights (red), the red channel of the texture indicates the brightness of brake lights (red), the green channel of the texture indicates the brightness of headlights (determined by the object name RGB), and the blue channel of the texture indicates the brightness of reversing lights (white)
+
+(3)	Export the model: Copy the blender script “blender_export_obj_NBMC” to Blender\3.1\scripts\addons_contrib\ and enable it in the blender plugin
+
+a.	Export the texture to dds format, save it in the same folder of the obj model, the name is the same as the corresponding object name, mtl file doesn't work.
+b.	It is recommended to use the blender NBMC script to export the obj model. If you use other software to export, the following requirements should be met (the blender NBMC script will automatically complete these tasks)
+c.	Use only triangular and convex polygon faces, split Concave Faces needs to be done manually in other software.
+d.	Vertex coordinates, uv coordinates, and normal vectors should be in one-to-one correspondence. That is, the surface format of the exported obj is (f 1/1/1 2/2/2 3/3/3).
+
+### 2.	Import model using NBMC
+
+(1)	The two paths in the figure are the folder unpacked by BNDLRepacker and the exported obj model. Clicking “Transform” will import the obj model and dds texture into the unpacked vehicle folder.  
+If NBMC does not find the dds texture with the same name as the object name in the folder where the obj is located, it will use the default texture.  
+![NBMC_screenshot](https://github.com/144hz/NFSbndlModelChallenger/blob/master/tutorial_images/2.jpg)
+
+(2)	In Position Adjustment interface, you can modify position of wheels and driver.  
+![NBMC_screenshot](https://github.com/144hz/NFSbndlModelChallenger/blob/master/tutorial_images/3.jpg)
+
+(3)	When NBMC transform is complete，drag the unpacked folder to BNDLRepacker to repacked BNDL file.
