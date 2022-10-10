@@ -2,6 +2,7 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
+*.py linguist-language=false
 
 ###############################################################################
 # Set default behavior for command prompt diff.

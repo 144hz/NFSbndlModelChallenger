@@ -23,6 +23,9 @@ namespace NFSbndlModelChallenger {
                 textBox_veh.Text = path;
                 pe = new ParameterEditor(path);
             }
+            if(pe == null || pe.script_path == "") {
+                MessageBox.Show("Parameter file not found! 未找到参数文件");
+            }
         }
 
         private void button_load_Click(object sender, EventArgs e) {

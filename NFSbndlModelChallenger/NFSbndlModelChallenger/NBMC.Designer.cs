@@ -103,11 +103,11 @@ namespace NFSbndlModelChallenger {
             this.label3.AutoSize = true;
             this.label3.BackColor = System.Drawing.Color.Transparent;
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(596, 440);
+            this.label3.Location = new System.Drawing.Point(560, 440);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(183, 15);
+            this.label3.Size = new System.Drawing.Size(215, 15);
             this.label3.TabIndex = 11;
-            this.label3.Text = "Binko_J 144hz@sina.com";
+            this.label3.Text = "Binko_J k144hz@outlook.com";
             // 
             // select_veh
             // 

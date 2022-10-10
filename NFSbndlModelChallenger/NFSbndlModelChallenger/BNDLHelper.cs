@@ -82,11 +82,19 @@ namespace NFSbndlModelChallenger {
             return mesh_id;
         }
 
-        public static List<string> Get_para_path(string type, string veh_path) {
-            string root_path = veh_path + @"raw\4_block\";
+        public static string Get_script_path(string veh_path) {
+            string root_path, script_path;
+            for (int i = 2; i <= 6; i++) {
+                root_path = veh_path + "raw\\"+ i +"_block\\";
+                datType2id.TryGetValue(21, out string base_syn);
+                script_path = root_path + "21_" + base_syn + '\\';
+                if (File.Exists(script_path + "1_a.dat"))
+                    return script_path;
+            }
+            return "";
+        }
 
-            datType2id.TryGetValue(21, out string base_syn);
-            string script_path = root_path + "21_" + base_syn + '\\';
+        public static List<string> Get_para_path(string type, string script_path) {
 
             List<string> para_path = new();
             para2syn.TryGetValue(type, out var syn_inf);

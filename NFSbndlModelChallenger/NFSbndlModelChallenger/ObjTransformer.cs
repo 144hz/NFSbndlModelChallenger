@@ -38,7 +38,7 @@ namespace NFSbndlModelChallenger {
         public void ObjTransform(uint car_id, string input_vehicle_path, string input_obj_file) {
 
             base_mtl_id = 0x80000000 + car_id * 0x100;
-            base_tex_id = 0x80000000 + car_id * 0x100 + 0x20;
+            base_tex_id = 0x80000000 + car_id * 0x100 + 0x40;
             input_obj_path = Path.GetDirectoryName(input_obj_file) + '\\';
 
             if (!input_vehicle_path.EndsWith("\\")) input_vehicle_path += '\\';
@@ -46,7 +46,10 @@ namespace NFSbndlModelChallenger {
             mesh_id = BNDLHelper.Get_mesh_id(input_vehicle_path, car_id, true);
 
             meshBlocks = LoadObj(input_obj_file);
-            if (meshBlocks.Count > 0x14) NBMC.OutputLog("OBJ too many object blocks OBJ物体数量太多，当前限制<20");
+            if (meshBlocks.Count > 0x40) {
+                NBMC.OutputLog("OBJ too many object blocks! OBJ物体数量太多，最大数量<64");
+                meshBlocks.RemoveRange(0x40, meshBlocks.Count - 0x40);
+            }
             CreateMesh();
             CreateMaterial();
             CreateRef();
@@ -119,7 +122,7 @@ namespace NFSbndlModelChallenger {
         }
 
         private void CreateMesh() {
-            MeshHelper.Get_mesh_header(mesh_id, out byte[] mesh_a, out byte[] mesh_b);
+            MeshHelper.Get_mesh_header(mesh_id, out byte[] mesh_a, out byte[] mesh_b, meshBlocks.Count);
             WriteMeshDat(mesh_id, mesh_a, mesh_b);
         }
 

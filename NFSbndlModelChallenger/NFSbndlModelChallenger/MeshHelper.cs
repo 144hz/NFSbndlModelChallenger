@@ -93,7 +93,7 @@ namespace NFSbndlModelChallenger {
                 byte[] pixel = new byte[0x28];
                 Get_vertex_byte8(ver_list[i]).CopyTo(pixel, 0x0);
                 Get_damage_unk_byte8().CopyTo(pixel, 0x8);
-                Get_bright_byte4(0x40).CopyTo(pixel, 0x10);
+                Get_bright_byte4(0x60).CopyTo(pixel, 0x10);
                 Get_uv_byte4(vt_list[i]).CopyTo(pixel, 0x14);
                 Get_uv_unk_byte4().CopyTo(pixel, 0x18);
                 Get_3C_unk_byte4().CopyTo(pixel, 0x1C);
@@ -140,22 +140,46 @@ namespace NFSbndlModelChallenger {
             return re_meshp;
         }
 
-        public static void Get_mesh_header(uint mesh_id, out byte[] mesh_a, out byte[] mesh_b) {
+        public static void Get_mesh_header(uint mesh_id, out byte[] mesh_a, out byte[] mesh_b, int block_num) {
             mesh_a = Resource1.mesh_a;
-            mesh_b = Resource1.mesh_b;
-            byte[] mesh_id_b = BitConverter.GetBytes(mesh_id);
-            mesh_id_b.CopyTo(mesh_a, 0);
+            BitConverter.GetBytes(mesh_id).CopyTo(mesh_a, 0);
+            mesh_a[0x40] = (byte)block_num;
+
+            byte[] mesh_b_header = new byte[0x20 + 0x10 * ((block_num - 1) / 4 + 1)];
+            byte[] mesh_b_data = new byte[0x60 * block_num];
+            byte[] mesh_b_link = new byte[0x10 * block_num];
+            mesh_b = new byte[mesh_b_header.Length + mesh_b_data.Length + mesh_b_link.Length];
+
+            Array.Copy(Resource1.mesh_b, mesh_b_header, 0x20);
+            for (int i=0; i< block_num; i++) {
+                Array.Copy(Resource1.mesh_b, 0x30, mesh_b_data, i * 0x60, 0x60);
+                Array.Copy(Resource1.mesh_b, 0x90, mesh_b_link, i * 0x10, 0x10);
+                BitConverter.GetBytes(mesh_b_header.Length + i * 0x60).CopyTo(mesh_b_header, 0x20 + i * 4);
+                BitConverter.GetBytes(mesh_b_header.Length + i * 0x60 + 0x30).CopyTo(mesh_b_data, i * 0x60 + 0x28);
+                BitConverter.GetBytes(mesh_b_header.Length + i * 0x60 + 0x48).CopyTo(mesh_b_data, i * 0x60 + 0x2C);
+                BitConverter.GetBytes(mesh_b_header.Length + i * 0x60 + 0x20).CopyTo(mesh_b_link, i * 0x10 + 8);
+            }
+
+            BitConverter.GetBytes(mesh_b_header.Length + mesh_b_data.Length).CopyTo(mesh_a, 0x38);
+            mesh_b[0x12] = (byte)block_num;
+
+            mesh_b_header.CopyTo(mesh_b, 0);
+            mesh_b_data.CopyTo(mesh_b, mesh_b_header.Length);
+            mesh_b_link.CopyTo(mesh_b, mesh_b_header.Length + mesh_b_data.Length);
         }
 
         private static byte[] Get_vertex_byte8(double[] vertex_d) {
-            if (vertex_d.Length != 3) Console.WriteLine("Error Vertex size");
             double VET_CORD_RATE = 10;
 
             short[] vertex = new short[4];
             vertex[3] = 0x7FFF;
             for (int i = 0; i < 3; i++) {
-                // 1 height
+                // [1] height
                 double ver_t = vertex_d[i] / VET_CORD_RATE;
+                if (ver_t > 1 || ver_t < -1) {
+                    ver_t = 0;
+                    NBMC.OutputLog("Object too large, try scaling down! 顶点座标过大，需要缩小模型");
+                }
                 vertex[i] = Convert.ToInt16(ver_t * 0x7FFF);
             }
 

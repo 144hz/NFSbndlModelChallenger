@@ -1,3 +1,5 @@
+V1.0.1.0
+
 1. 使用NFS BNDL Repacker解包或打包BNDL车辆文件
     Use NFS BNDL Repacker to unpack or repack BNDL vehicle file
 2. 使用Blender NBMC script导出obj模型

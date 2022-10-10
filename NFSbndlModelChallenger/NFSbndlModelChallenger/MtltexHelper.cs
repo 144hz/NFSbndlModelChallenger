@@ -21,7 +21,7 @@ namespace NFSbndlModelChallenger {
         private static readonly Dictionary<ObjTransformer.MeshType, List<uint>> methType2pos = new() {
             { ObjTransformer.MeshType.metal, new List<uint> { 0x60 } },
             { ObjTransformer.MeshType.glass, new List<uint> {  } },
-            { ObjTransformer.MeshType.carbon, new List<uint> { 0xb0 } },
+            { ObjTransformer.MeshType.carbon, new List<uint> { 0xb0, 0xd0 } },
             { ObjTransformer.MeshType.light, new List<uint> { 0x110, 0x120, 0x130 } },
             { ObjTransformer.MeshType.tmask, new List<uint> { 0x180 } },
             { ObjTransformer.MeshType.interior, new List<uint> { 0xd0, 0xe0, 0xf0 } }

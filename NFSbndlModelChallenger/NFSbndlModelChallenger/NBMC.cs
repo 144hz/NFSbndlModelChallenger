@@ -10,11 +10,13 @@ namespace NFSbndlModelChallenger {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
             Icon = Properties.Resources._1icon;
+            texBox_output.BackColor = System.Drawing.Color.FromArgb(10, 0, 0, 0);
         }
 
         private static string outputLog = "";
         public static void OutputLog(string log) {
-            outputLog += log + "\r\n";
+            if(!outputLog.Contains(log))
+                outputLog += log + "\r\n";
         }
 
         private void button_transform_Click(object sender, EventArgs e) {
